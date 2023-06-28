@@ -11,9 +11,6 @@ import (
 	"github.com/tetratelabs/wazero/imports/wasi_snapshot_preview1"
 )
 
-//go:embed test.wasm
-var guestWasm []byte
-
 func main() {
 	ctx := context.Background()
 
@@ -22,6 +19,12 @@ func main() {
 	defer r.Close(ctx)
 
 	wasi_snapshot_preview1.MustInstantiate(ctx, r)
+
+	// Read program
+	wasm, err := os.ReadFile(os.Args[1])
+	if err != nil {
+		log.Panicf("failed to read WASM file: %v", err)
+	}
 
 	// Run program
 	conf := wazero.NewModuleConfig().
@@ -34,7 +37,7 @@ func main() {
 		WithFSConfig(wazero.NewFSConfig()).
 		WithRandSource(rand.Reader)
 
-	_, err := r.InstantiateWithConfig(ctx, guestWasm, conf)
+	_, err = r.InstantiateWithConfig(ctx, wasm, conf)
 	if err != nil {
 		log.Panicf("failed to instantiate WASM program: %v", err)
 	}
