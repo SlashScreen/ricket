@@ -12,6 +12,11 @@ import (
 )
 
 func main() {
+	// Check for arguments
+	if len(os.Args) < 2 {
+		log.Panicf("No path to WASM file.")
+	}
+
 	ctx := context.Background()
 
 	// Instantiate runtime
