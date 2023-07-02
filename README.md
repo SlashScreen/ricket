@@ -10,7 +10,6 @@ Ricket is a frontend and toolset for [wazero](https://github.com/tetratelabs/waz
 
 Currently it's experimental, and I havent yet built it Plan 9 quite yet.
 
-
 ## Project goals
 
 - [x] Be able to run WASM programs at all
