@@ -14,7 +14,7 @@ import (
 func main() {
 	// Check for arguments
 	if len(os.Args) < 2 {
-		log.Panicf("No path to WASM file.")
+		log.Panicf("No path to WASM file given. Usage: ricket [path]")
 	}
 
 	ctx := context.Background()
