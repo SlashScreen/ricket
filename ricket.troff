@@ -1,0 +1,95 @@
+.TH MAN 1
+.SH NAME
+
+ricket \- run and manage WASI programs
+
+.SH SYNOPSIS
+
+.PP
+.B ricket run
+.B path
+[
+.BI args ...
+]
+
+.PP
+.B ricket package path name bin_dir
+[
+.B -o 
+.I omit
+]
+
+.PP
+.B ricket
+.IR help | ? 
+
+.SH DESCRIPTION
+
+.PP
+.I ricket 
+is a WASI runtime for Plan 9 from Bell Labs, which allows for running CLI 
+applications written in languages that cannot natively compile to Plan 9.
+
+.PP
+.B ricket run
+will run the .wasm file at the path specified by 
+.BR path .
+Any
+.B args
+will be passed into the program.
+
+.PP
+.B ricket package
+will bundle the .wasm file at the path specified by
+.B path
+with a copy of the 
+.I ricket 
+executable, creating a standalone application with the name
+.B name
+and deposit the contents at
+.BR bin_dir . 
+Passing in
+.B -o
+will omit the 
+.I ricket 
+executable, relying on an already-installed and globally-accessible 
+.IR ricket .
+This will make the program smaller, at the cost of no longer being standalone.
+.PP
+In-depth, this process creates these files:
+.RS
+1. A copy of the
+.I ricket 
+executable (by default).
+
+2. A copy of the desired .wasm file.
+
+3. An .rc file that calls the 
+.I ricket 
+executable (or otherwise installed if
+.B -o
+is passed) with the relevant arguments.
+
+4. an mk file that will finish installation into your system. see
+.BI mk (1)
+.RE
+The program itself is the .rc file, allowing the user to simply type
+.I my_program
+instead of
+.I ricket run my_program.wasm
+, and allow for easy (if large) distribution.
+
+.PP
+.B ricket
+.IR help | ? 
+will open a brief help page. This is intended for non-Plan 9 users of 
+.IR ricket ; 
+Plan 9 users should use
+.B man ricket
+instead to open this page.
+
+.SH BUGS
+
+While not strictly a bug,
+.I ricket
+must interperet the WASM file, which can be slow as dirt. Perhaps JIT compilation will be availible in the future.
