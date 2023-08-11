@@ -1,0 +1,5 @@
+
+#!/bin/rc
+mv test /amd64/test/bin
+bind -b /amd64/test/bin /bin
+	

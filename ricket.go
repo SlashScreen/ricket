@@ -5,8 +5,11 @@ import (
 	"crypto/rand"
 	_ "embed"
 	"fmt"
+	"io"
+	"io/fs"
 	"log"
 	"os"
+	"path"
 
 	"github.com/tetratelabs/wazero"
 	"github.com/tetratelabs/wazero/imports/wasi_snapshot_preview1"
@@ -75,7 +78,77 @@ func run_program() {
 }
 
 func package_file() {
+	// Check for arguments
+	if len(os.Args) < 5 {
+		log.Println("Improper arguments. See `ricket help` or `man ricket`.")
+		return
+	}
 
+	wasm_path := os.Args[2]
+	bin_dir := os.Args[4]
+	program_name := os.Args[3]
+
+	os.Mkdir(bin_dir+"/"+program_name, fs.ModeAppend)
+
+	{ // Step 1: Copy wasm file
+		_, wasm_filename := path.Split(wasm_path) // make sure we only get the wasm bit
+		dst := fmt.Sprintf("%s/%s/%s", bin_dir, program_name, wasm_filename)
+		dest_file, err := os.Create(dst)
+		if err != nil {
+			fmt.Printf("Error while copying wasm file: %s", err)
+			return
+		}
+		wasm_file, err := os.Open(wasm_path)
+		if err != nil {
+			fmt.Printf("Error while copying wasm file: %s", err)
+			return
+		}
+
+		io.Copy(dest_file, wasm_file)
+	}
+
+	{ // Step 2: Copy ricket file if necessary
+		omit := len(os.Args) == 6 && os.Args[5] == "-o"
+		if !omit {
+			ricket_path, err := os.Executable()
+			if err != nil {
+				fmt.Printf("Error while copying ricket file: %s", err)
+				return
+			}
+			ricket_exec, err := os.Open(ricket_path)
+			if err != nil {
+				fmt.Printf("Error while copying ricket file: %s", err)
+				return
+			}
+			dest_file, err := os.Create(fmt.Sprintf("%s/%s/ricket", bin_dir, program_name))
+			if err != nil {
+				fmt.Printf("Error while copying ricket file: %s", err)
+				return
+			}
+
+			io.Copy(dest_file, ricket_exec)
+		}
+	}
+
+	{ // Step 3: Write RC file
+		dst := fmt.Sprintf("%s/%s/%s", bin_dir, program_name, program_name)
+		rc, err := os.Create(dst)
+		if err != nil {
+			fmt.Printf("Error while creating rc file: %s", err)
+			return
+		}
+		rc.Write([]byte(format_rc(wasm_path)))
+	}
+
+	{ // Step 4: Write install file
+		output := format_install(program_name)
+		dst, err := os.Create(fmt.Sprintf("%s/install.rc", bin_dir))
+		if err != nil {
+			fmt.Printf("Error while writing install file: %s", err)
+			return
+		}
+		dst.Write([]byte(output))
+	}
 }
 
 func help() {
@@ -86,3 +159,17 @@ usage:
 	ricket help | ? - open this page. Plan 9 users should instead run 'man ricket'.
 	`)
 }
+
+func format_rc(full_path string) string {
+	_, path := path.Split(full_path)
+	return fmt.Sprintf(`#!/bin/rc
+ricket run %s $*
+`, path)
+}
+
+func format_install(name string) string {
+	return fmt.Sprintf(`#!/bin/rc
+mv %s /amd64/%s/bin
+bind -b /amd64/%s/bin /bin
+	`, name, name, name)
+} // TODO: Other architectures

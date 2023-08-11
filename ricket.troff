@@ -70,8 +70,10 @@ executable (or otherwise installed if
 .B -o
 is passed) with the relevant arguments.
 
-4. an mk file that will finish installation into your system. see
-.BI mk (1)
+4. an install script that will finish installation into your system. 
+Simply type
+.I install
+to finish.
 .RE
 The program itself is the .rc file, allowing the user to simply type
 .I my_program

@@ -1,0 +1,3 @@
+
+#!/bin/rc
+ricket run test.wasm $*

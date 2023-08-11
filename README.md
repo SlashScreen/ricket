@@ -14,3 +14,4 @@ Currently it's experimental.
 
 - [x] Be able to run WASI programs at all
 - [X] Be able to run WASI programs on Plan 9
+- [ ] Be able to package WASI programs as standalone apps
