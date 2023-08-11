@@ -1,0 +1,4 @@
+#!bin/rc
+mv ricket /amd64/ricket/bin
+bind -b /amd64/ricket/bin /bin
+mv ricket.troff /sys/man/1
