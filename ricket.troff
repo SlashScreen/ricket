@@ -70,9 +70,9 @@ executable (or otherwise installed if
 .B -o
 is passed) with the relevant arguments.
 
-4. an install script that will finish installation into your system. 
+4. a mkfile that will finish installation into your system. 
 Simply type
-.I install
+.I mk install
 to finish.
 .RE
 The program itself is the .rc file, allowing the user to simply type

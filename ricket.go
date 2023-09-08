@@ -15,6 +15,8 @@ import (
 	"github.com/tetratelabs/wazero/imports/wasi_snapshot_preview1"
 )
 
+const arch = "amd64"
+
 func main() {
 	if len(os.Args) == 1 {
 		fmt.Println("Not enough arguments. Type \"ricket help\" for usage.")
@@ -142,7 +144,7 @@ func package_file() {
 
 	{ // Step 4: Write install file
 		output := format_install(program_name)
-		dst, err := os.Create(fmt.Sprintf("%s/install.rc", bin_dir))
+		dst, err := os.Create(fmt.Sprintf("%s/mkfile", bin_dir))
 		if err != nil {
 			fmt.Printf("Error while writing install file: %s", err)
 			return
@@ -168,8 +170,12 @@ ricket run %s $*
 }
 
 func format_install(name string) string {
-	return fmt.Sprintf(`#!/bin/rc
-mv %s /amd64/%s/bin
-bind -b /amd64/%s/bin /bin
-	`, name, name, name)
+	return fmt.Sprintf(`
+ARCH = %s
+USER = glenda
+
+install:V:
+	cp %s /$ARCH/%s/bin
+	echo "bind -b /$ARCH/%s/bin /bin" > /usr/$USER/profile
+	`, arch, name, name, name)
 } // TODO: Other architectures
