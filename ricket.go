@@ -90,7 +90,10 @@ func package_file() {
 	bin_dir := os.Args[4]
 	program_name := os.Args[3]
 
-	os.Mkdir(bin_dir+"/"+program_name, fs.ModeAppend)
+	err := os.Mkdir(bin_dir+"/"+program_name, fs.ModeAppend)
+	if err != nil {
+		fmt.Printf("Error while making destination directory: %s", err)
+	}
 
 	{ // Step 1: Copy wasm file
 		_, wasm_filename := path.Split(wasm_path) // make sure we only get the wasm bit
@@ -176,6 +179,6 @@ USER = glenda
 
 install:V:
 	cp %s /$ARCH/%s/bin
-	echo "bind -b /$ARCH/%s/bin /bin" > /usr/$USER/profile
+	echo "bind -b /$ARCH/%s/bin /bin" >> /usr/$USER/lib/profile
 	`, arch, name, name, name)
 } // TODO: Other architectures
