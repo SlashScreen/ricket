@@ -6,7 +6,6 @@ import (
 	_ "embed"
 	"fmt"
 	"io"
-	"io/fs"
 	"log"
 	"os"
 	"path"
@@ -90,7 +89,7 @@ func package_file() {
 	bin_dir := os.Args[4]
 	program_name := os.Args[3]
 
-	err := os.MkdirAll(bin_dir+"/"+program_name, fs.ModeDir)
+	err := os.MkdirAll(bin_dir+"/"+program_name, 0777)
 	if err != nil {
 		fmt.Printf("Error while making destination directory: %s\n", err)
 		return
@@ -101,7 +100,7 @@ func package_file() {
 		dst := fmt.Sprintf("%s/%s/%s", bin_dir, program_name, wasm_filename)
 		dest_file, err := os.Create(dst)
 		if err != nil {
-			fmt.Printf("Error while copying wasm file: %s\n", err)
+			fmt.Printf("Error while creating wasm file directory: %s\n", err)
 			return
 		}
 		wasm_file, err := os.Open(wasm_path)
