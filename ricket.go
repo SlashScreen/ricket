@@ -90,7 +90,11 @@ func package_file() {
 	bin_dir := os.Args[4]
 	program_name := os.Args[3]
 
-	err := os.Mkdir(bin_dir+"/"+program_name, fs.ModeAppend)
+	err := os.Mkdir(bin_dir, fs.ModeAppend)
+	if err != nil {
+		fmt.Printf("Error while making destination directory: %s", err)
+	}
+	err = os.Mkdir(bin_dir+"/"+program_name, fs.ModeAppend)
 	if err != nil {
 		fmt.Printf("Error while making destination directory: %s", err)
 	}
