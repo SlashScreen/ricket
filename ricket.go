@@ -53,7 +53,7 @@ func run_program() {
 	// Read program
 	wasm, err := os.ReadFile(os.Args[2])
 	if err != nil {
-		log.Panicf("failed to read WASM file: %v", err)
+		log.Panicf("failed to read WASM file: %v\n", err)
 	}
 
 	var wasmArgs []string
@@ -75,7 +75,7 @@ func run_program() {
 
 	_, err = r.InstantiateWithConfig(ctx, wasm, conf)
 	if err != nil {
-		log.Panicf("failed to instantiate WASM program: %v", err)
+		log.Panicf("failed to instantiate WASM program: %v\n", err)
 	}
 }
 
@@ -90,13 +90,10 @@ func package_file() {
 	bin_dir := os.Args[4]
 	program_name := os.Args[3]
 
-	err := os.Mkdir(bin_dir, fs.ModeAppend)
+	err := os.MkdirAll(bin_dir+"/"+program_name, fs.ModeAppend)
 	if err != nil {
-		fmt.Printf("Error while making destination directory: %s", err)
-	}
-	err = os.Mkdir(bin_dir+"/"+program_name, fs.ModeAppend)
-	if err != nil {
-		fmt.Printf("Error while making destination directory: %s", err)
+		fmt.Printf("Error while making destination directory: %s\n", err)
+		return
 	}
 
 	{ // Step 1: Copy wasm file
@@ -104,12 +101,12 @@ func package_file() {
 		dst := fmt.Sprintf("%s/%s/%s", bin_dir, program_name, wasm_filename)
 		dest_file, err := os.Create(dst)
 		if err != nil {
-			fmt.Printf("Error while copying wasm file: %s", err)
+			fmt.Printf("Error while copying wasm file: %s\n", err)
 			return
 		}
 		wasm_file, err := os.Open(wasm_path)
 		if err != nil {
-			fmt.Printf("Error while copying wasm file: %s", err)
+			fmt.Printf("Error while copying wasm file: %s\n", err)
 			return
 		}
 
@@ -121,17 +118,17 @@ func package_file() {
 		if !omit {
 			ricket_path, err := os.Executable()
 			if err != nil {
-				fmt.Printf("Error while copying ricket file: %s", err)
+				fmt.Printf("Error while copying ricket file: %s\n", err)
 				return
 			}
 			ricket_exec, err := os.Open(ricket_path)
 			if err != nil {
-				fmt.Printf("Error while copying ricket file: %s", err)
+				fmt.Printf("Error while copying ricket file: %s\n", err)
 				return
 			}
 			dest_file, err := os.Create(fmt.Sprintf("%s/%s/ricket", bin_dir, program_name))
 			if err != nil {
-				fmt.Printf("Error while copying ricket file: %s", err)
+				fmt.Printf("Error while copying ricket file: %s\n", err)
 				return
 			}
 
@@ -143,7 +140,7 @@ func package_file() {
 		dst := fmt.Sprintf("%s/%s/%s", bin_dir, program_name, program_name)
 		rc, err := os.Create(dst)
 		if err != nil {
-			fmt.Printf("Error while creating rc file: %s", err)
+			fmt.Printf("Error while creating rc file: %s\n", err)
 			return
 		}
 		rc.Write([]byte(format_rc(wasm_path)))
@@ -153,7 +150,7 @@ func package_file() {
 		output := format_install(program_name)
 		dst, err := os.Create(fmt.Sprintf("%s/mkfile", bin_dir))
 		if err != nil {
-			fmt.Printf("Error while writing install file: %s", err)
+			fmt.Printf("Error while writing install file: %s\n", err)
 			return
 		}
 		dst.Write([]byte(output))
