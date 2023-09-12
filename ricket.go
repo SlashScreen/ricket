@@ -184,6 +184,7 @@ install:V:
 	mkdir -p /$ARCH/$PROJECT/bin
 	for (f in $PROJECT/*) cp $f /$ARCH/$PROJECT/bin
 	cp $PROJECT /$ARCH/$PROJECT
+	chmod +x /$ARCH/$PROJECT/$PROJECT
 	echo bind -b /$ARCH/$PROJECT /bin >> /usr/$USER/lib/profile
 `,
 		arch, name)
