@@ -169,7 +169,7 @@ usage:
 func format_rc(full_path string) string {
 	_, path := path.Split(full_path)
 	return fmt.Sprintf(`#!/bin/rc
-ricket run %s $*
+bin/ricket run bin/%s $*
 `, path)
 }
 
@@ -182,7 +182,7 @@ PROJECT = %s
 
 install:V:
 	mkdir -p /$ARCH/$PROJECT/bin
-	for (f in $PROJECT/*) cp $f /$ARCH/$PROJECT/bin
+	for (f in bin/*) cp $f /$ARCH/$PROJECT/bin
 	cp $PROJECT /$ARCH/$PROJECT
 	chmod +x /$ARCH/$PROJECT/$PROJECT
 	echo bind -b /$ARCH/$PROJECT /bin >> /usr/$USER/lib/profile
