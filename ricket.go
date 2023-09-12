@@ -98,7 +98,7 @@ func package_file() {
 
 	{ // Step 1: Copy wasm file
 		_, wasm_filename := path.Split(wasm_path) // make sure we only get the wasm bit
-		dst := fmt.Sprintf("%s/%s/%s", bin_dir, program_name, wasm_filename)
+		dst := fmt.Sprintf("%s/%s/bin/%s", bin_dir, program_name, wasm_filename)
 		dest_file, err := os.Create(dst)
 		if err != nil {
 			fmt.Printf("Error while creating wasm file directory: %s\n", err)
@@ -126,7 +126,7 @@ func package_file() {
 				fmt.Printf("Error while copying ricket file: %s\n", err)
 				return
 			}
-			dest_file, err := os.Create(fmt.Sprintf("%s/%s/ricket", bin_dir, program_name))
+			dest_file, err := os.Create(fmt.Sprintf("%s/%s/bin/ricket", bin_dir, program_name))
 			if err != nil {
 				fmt.Printf("Error while copying ricket file: %s\n", err)
 				return
@@ -137,7 +137,7 @@ func package_file() {
 	}
 
 	{ // Step 3: Write RC file
-		dst := fmt.Sprintf("%s/%s", bin_dir, program_name)
+		dst := fmt.Sprintf("%s/%s/%s", bin_dir, program_name, program_name)
 		rc, err := os.Create(dst)
 		if err != nil {
 			fmt.Printf("Error while creating rc file: %s\n", err)
