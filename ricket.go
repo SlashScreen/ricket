@@ -9,12 +9,13 @@ import (
 	"log"
 	"os"
 	"path"
+	"runtime"
 
 	"github.com/tetratelabs/wazero"
 	"github.com/tetratelabs/wazero/imports/wasi_snapshot_preview1"
 )
 
-const arch = "amd64"
+const arch = runtime.GOARCH
 
 func main() {
 	if len(os.Args) == 1 {
@@ -178,7 +179,7 @@ ARCH = %s
 USER = glenda
 
 install:V:
-	cp %s /$ARCH/%s/bin
-	echo "bind -b /$ARCH/%s/bin /bin" >> /usr/$USER/lib/profile
-	`, arch, name, name, name)
-} // TODO: Other architectures
+	dircp %s /$ARCH/
+	echo "bind -b /$ARCH/%s /bin" >> /usr/$USER/lib/profile
+	`, arch, name, name)
+}
