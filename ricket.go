@@ -137,7 +137,7 @@ func package_file() {
 	}
 
 	{ // Step 3: Write RC file
-		dst := fmt.Sprintf("%s/%s/%s", bin_dir, program_name, program_name)
+		dst := fmt.Sprintf("%s/%s", bin_dir, program_name)
 		rc, err := os.Create(dst)
 		if err != nil {
 			fmt.Printf("Error while creating rc file: %s\n", err)
@@ -174,12 +174,17 @@ ricket run %s $*
 }
 
 func format_install(name string) string {
-	return fmt.Sprintf(`
+	return fmt.Sprintf(
+		`
 ARCH = %s
 USER = glenda
+PROJECT = %s
 
 install:V:
-	dircp %s /$ARCH/
-	echo "bind -b /$ARCH/%s /bin" >> /usr/$USER/lib/profile
-	`, arch, name, name)
+	mkdir -p /$ARCH/$PROJECT/bin
+	for (f in $PROJECT/*) cp $f /$ARCH/$PROJECT/bin
+	cp $PROJECT /$ARCH/$PROJECT
+	echo bind -b /$ARCH/$PROJECT /bin >> /usr/$USER/lib/profile
+`,
+		arch, name)
 }
