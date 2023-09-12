@@ -148,7 +148,7 @@ func package_file() {
 
 	{ // Step 4: Write install file
 		output := format_install(program_name)
-		dst, err := os.Create(fmt.Sprintf("%s/mkfile", bin_dir))
+		dst, err := os.Create(fmt.Sprintf("%s/%s/mkfile", bin_dir, program_name))
 		if err != nil {
 			fmt.Printf("Error while writing install file: %s\n", err)
 			return
