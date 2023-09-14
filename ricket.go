@@ -69,6 +69,6 @@ func run(path string) {
 func help() {
 	println(`
 usage: ricket/run path [ args ... ]
-run 'man ricket' for rmore info.
+run 'man ricket' for more info.
 	`)
 }

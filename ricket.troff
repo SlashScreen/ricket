@@ -41,7 +41,7 @@ will be passed into the program.
 will change the wasm file in
 .BR path .
 to make it act as an executable, assuming ricket is installed on the system.
-.B -o
+.B -o output
 is the optional output file path.
 
 .SH BUGS
