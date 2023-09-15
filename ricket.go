@@ -15,7 +15,7 @@ func main() {
 	if len(os.Args) == 0 {
 		help()
 	} else {
-		run(os.Args[0])
+		run(os.Args[1])
 	}
 }
 
