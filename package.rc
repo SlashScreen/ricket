@@ -2,7 +2,7 @@
 
 flagfmt='o:out'
 args='wasmfile'
-if(! eval `''{aux/getflags $*} || ! $#* 0)
+if(! eval `''{aux/getflags $*} || ~ $#* 0)
 	exec aux/usage
 if(~ $#out 0)
 	out = wasm.out
