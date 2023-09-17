@@ -1,6 +1,6 @@
 #!/bin/rc
 
-flagfmt='o:out'
+flagfmt='o:out out'
 args='wasmfile'
 if(! eval `''{aux/getflags $*} || ~ $#* 0)
 	exec aux/usage
